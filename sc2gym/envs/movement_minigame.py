@@ -94,10 +94,10 @@ class BaseMovement1dEnv(SC2GameEnv):
 class BaseMovement2dEnv(BaseMovement1dEnv):
     def _get_action_space(self):
         screen_shape = self.observation_spec[0]["feature_screen"][1:]
-        return spaces.MultiDiscrete([(0, s-1) for s in screen_shape])
+        return spaces.MultiDiscrete([s-1 for s in screen_shape])
 
     def _translate_action(self, action):
         for ix, act in enumerate(action):
-            if act < self.action_space.low[ix] or act > self.action_space.high[ix]:
+            if act < 0 or act > self.action_space.nvec[ix]:
                 return [_NO_OP]
         return [_MOVE_SCREEN, _NOT_QUEUED, action]
