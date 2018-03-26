@@ -16,6 +16,7 @@
 import logging
 
 import gym
+from gym.utils import seeding
 from pysc2.env import sc2_env
 from pysc2.env.environment import StepType
 from pysc2.lib import actions
@@ -45,7 +46,11 @@ class SC2GameEnv(gym.Env):
         self._episode_reward = 0
         self._total_reward = 0
 
-    def _step(self, action):
+    def _seed(self, seed=None):
+        self.np_random, seed = seeding.np_random(seed)
+        return [seed]
+
+    def step(self, action):
         return self._safe_step(action)
 
     def _safe_step(self, action):
@@ -67,7 +72,7 @@ class SC2GameEnv(gym.Env):
         self._total_reward += reward
         return obs, reward, obs.step_type == StepType.LAST, {}
 
-    def _reset(self):
+    def reset(self):
         if self._env is None:
             self._init_env()
         if self._episode > 0:
@@ -83,6 +88,9 @@ class SC2GameEnv(gym.Env):
         self.available_actions = obs.observation['available_actions']
         return obs
 
+    def _render(self, mode, close=True):
+        logger.info("Asked to render with close: %d.", close)
+
     def save_replay(self, replay_dir):
         self._env.save_replay(replay_dir)
 
@@ -91,14 +99,14 @@ class SC2GameEnv(gym.Env):
         logger.debug("Initializing SC2Env with settings: %s", args)
         self._env = sc2_env.SC2Env(**args)
 
-    def _close(self):
+    def close(self):
         if self._episode > 0:
             logger.info("Episode %d ended with reward %d after %d steps.",
                         self._episode, self._episode_reward, self._num_step)
             logger.info("Got %d total reward, with an average reward of %g per episode",
                         self._total_reward, float(self._total_reward) / self._episode)
         self._env.close()
-        super()._close()
+        super().close()
 
     @property
     def settings(self):

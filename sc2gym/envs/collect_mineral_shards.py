@@ -72,10 +72,10 @@ class CollectMineralShardsGroupsEnv(BaseMovement2dEnv):
         obs = self._safe_step([_CONTROL_GROUP, _GROUP_SET, [3]])
         return obs
 
-    def _step(self, action):
+    def step(self, action):
         if _MOVE_SCREEN not in self.available_actions:
             self._init_control_groups()
-        return super()._step(action)
+        return super().step(action)
 
     def _get_action_space(self):
         screen_shape = self.observation_spec[0]["feature_screen"][1:]

@@ -40,8 +40,8 @@ class BaseMovement1dEnv(SC2GameEnv):
         self._action_space = None
         self._observation_space = None
 
-    def _reset(self):
-        super()._reset()
+    def reset(self):
+        super().reset()
         return self._post_reset()
 
     def _post_reset(self):
@@ -49,7 +49,7 @@ class BaseMovement1dEnv(SC2GameEnv):
         obs = self._extract_observation(obs)
         return obs
 
-    def _step(self, action):
+    def step(self, action):
         action = self._translate_action(action)
         obs, reward, done, info = self._safe_step(action)
         if obs is None:
