@@ -94,7 +94,7 @@ class BaseMovement1dEnv(SC2GameEnv):
 class BaseMovement2dEnv(BaseMovement1dEnv):
     def _get_action_space(self):
         screen_shape = self.observation_spec[0]["feature_screen"][1:]
-        return spaces.MultiDiscrete([s-1 for s in screen_shape])
+        return spaces.MultiDiscrete([s for s in screen_shape])
 
     def _translate_action(self, action):
         for ix, act in enumerate(action):
