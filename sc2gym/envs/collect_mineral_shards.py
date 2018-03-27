@@ -97,6 +97,6 @@ class CollectMineralShardsGroupsEnv(BaseMovement2dEnv):
         shape = (1, ) + self.observation_space.shape[1:]
         obs = np.concatenate((
             obs.observation["feature_screen"][_PLAYER_RELATIVE].reshape(shape),
-            obs.observation['screen'][_SELECTED].reshape(shape)
+            obs.observation['feature_screen'][_SELECTED].reshape(shape)
         ), axis=0)
         return obs
